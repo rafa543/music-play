@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { StorageAccessFramework } from 'expo-file-system';
 import * as eva from '@eva-design/eva';
 import { StyleSheet, View, TextInput } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,7 +12,8 @@ import Shuffle from '../assets/shuffle-solid.svg'
 import Music from '../assets/img-music.svg'
 import Frame from '../assets/Frame.svg'
 import Vector from '../assets/Vector.svg'
-import { Text, Button, Layout, BottomNavigation, BottomNavigationTab, TabView, Tab } from '@ui-kitten/components';
+import Playlist from '../assets/playlist.svg'
+import { Text, Button, Layout, BottomNavigation, BottomNavigationTab, TabView, Tab, TabBar } from '@ui-kitten/components';
 import { TouchableWithoutFeedback } from '@ui-kitten/components/devsupport';
 
 const AlertIcon = (props) => (
@@ -20,7 +22,36 @@ const AlertIcon = (props) => (
 
 export default function Home() {
 
+
+    async function adicionar1() {
+        const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
+        console.log("teste")
+        if (permissions.granted) {
+            // Gets SAF URI from response
+            const uri = permissions.directoryUri;
+            console.log("teste")
+            // Gets all files inside of selected directory
+            const files = await StorageAccessFramework.readDirectoryAsync(uri);
+            alert(`Files inside ${uri}:\n\n${JSON.stringify(files)}`);
+        }
+
+    }
+
+    // console.log(adicionar1())
+    const PersonIcon = (props) => (
+        <Icon {...props} name='home' size={25} />
+    );
+
+    const BellIcon = (props) => (
+        <Icon {...props} name='headphones' size={25} />
+    );
+
+    const EmailIcon = (props) => (
+        <Playlist height={25} width={25} color="#000" />
+    );
+
     const [selectedIndex, setSelectedIndex] = React.useState(0);
+    const [selectedIndexx, setSelectedIndexx] = React.useState(0);
 
     return (
         <View style={{ backgroundColor: "#EFEFF1" }}>
@@ -61,68 +92,22 @@ export default function Home() {
                             <Shuffle height={25} width={25} fill="black" />
                             <Retwwet height={30} width={30} fill="black" />
                         </View>
-                        <View style={{justifyContent: 'space-between', paddingHorizontal: 25,
+                        {/* <View style={{
+                            justifyContent: 'space-between', paddingHorizontal: 25,
                             paddingTop: 16,
-                            flexDirection: 'row', alignItems: 'center'}}>
+                            flexDirection: 'row', alignItems: 'center'
+                        }}>
                             <Music height={50} width={50} />
                             <View>
                                 <Text category="s1"  >Turning page</Text>
                                 <Text category="c2" appearance='hint'>Corey Morton</Text>
                             </View>
                             <Text appearance='hint'>04:32</Text>
-                            <Frame height={25} width={25}/>
-                            <Vector height={20} width={20}/>
-                        </View>
-                        <View style={{justifyContent: 'space-between', paddingHorizontal: 25,
-                            paddingTop: 16,
-                            flexDirection: 'row', alignItems: 'center'}}>
-                            <Music height={50} width={50} />
-                            <View>
-                                <Text category="s1"  >Turning page</Text>
-                                <Text category="c2" appearance='hint'>Corey Morton</Text>
-                            </View>
-                            <Text appearance='hint'>04:32</Text>
-                            <Frame height={25} width={25}/>
-                            <Vector height={20} width={20}/>
-                        </View>
-                        <View style={{justifyContent: 'space-between', paddingHorizontal: 25,
-                            paddingTop: 16,
-                            flexDirection: 'row', alignItems: 'center'}}>
-                            <Music height={50} width={50} />
-                            <View>
-                                <Text category="s1"  >Turning page</Text>
-                                <Text category="c2" appearance='hint'>Corey Morton</Text>
-                            </View>
-                            <Text appearance='hint'>04:32</Text>
-                            <Frame height={25} width={25}/>
-                            <Vector height={20} width={20}/>
-                        </View>
-                        <View style={{justifyContent: 'space-between', paddingHorizontal: 25,
-                            paddingTop: 16,
-                            flexDirection: 'row', alignItems: 'center'}}>
-                            <Music height={50} width={50} />
-                            <View>
-                                <Text category="s1"  >Turning page</Text>
-                                <Text category="c2" appearance='hint'>Corey Morton</Text>
-                            </View>
-                            <Text appearance='hint'>04:32</Text>
-                            <Frame height={25} width={25}/>
-                            <Vector height={20} width={20}/>
-                        </View>
-
-                        <View style={{justifyContent: 'space-between', paddingHorizontal: 25,
-                            paddingTop: 16,
-                            flexDirection: 'row', alignItems: 'center'}}>
-                            <Music height={50} width={50} />
-                            <View>
-                                <Text category="s1"  >Turning page</Text>
-                                <Text category="c2" appearance='hint'>Corey Morton</Text>
-                            </View>
-                            <Text appearance='hint'>04:32</Text>
-                            <Frame height={25} width={25}/>
-                            <Vector height={20} width={20}/>
-                        </View>
+                            <Frame height={25} width={25} />
+                            <Vector height={20} width={20} />
+                        </View> */}
                     </Layout>
+
                 </Tab>
                 <Tab title='Albuns'>
                     <Layout style={styles.tabContainer}>
@@ -141,6 +126,13 @@ export default function Home() {
                 </Tab>
             </TabView>
 
+            <TabBar
+                selectedIndex={selectedIndex}
+                onSelect={index => setSelectedIndex(index)}>
+                <Tab icon={PersonIcon} title='Home' />
+                <Tab icon={BellIcon} title='Musica' />
+                <Tab icon={EmailIcon} title='Playlist' />
+            </TabBar>
         </View>
     )
 }
@@ -188,7 +180,7 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     tabContainer: {
-        height: 500,
+        height: 400,
         // alignItems: 'center',
         // justifyContent: 'center',
 
